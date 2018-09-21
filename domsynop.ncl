@@ -100,8 +100,8 @@ lon = b->g4_lon_2
 ; type = "ncgm"
  type = "png"
 
- type@wkWidth = 5000 
- type@wkHeight = 3000 
+  type@wkWidth = 2500 
+  type@wkHeight = 2500 
   
 
  wks = gsn_open_wks(type,"dom_synop_"+boundary+timem)
@@ -109,15 +109,14 @@ lon = b->g4_lon_2
 
   ;---Set common resources for all plots
   res                = True
-  res@gsnFrame       = False
   res@gsnDraw        = False
+  res@gsnFrame       = False
   res@gsnLeftString  = ""
   res@gsnRightString = ""
 
-
 ;---Map plot
   map_res               = res
-  map_res@gsnMaximize           = True
+  ;map_res@gsnMaximize           = True
   ;map_res@gsnLeftStringFontHeightF = 0.02
   map_res@mpOutlineOn               = True        ; turn on continental outlines
   ;map_res@mpGridAndLimbOn           = True
@@ -148,13 +147,13 @@ lon = b->g4_lon_2
   ;map_res@mpGridLineThicknessF = 5.0
   map_res@mpGeophysicalLineColor      = "Black"  ; Overwrite basic map settings
   map_res@mpLandFillColor            =-1
-  map_res@tmXBLabelFontHeightF = 0.015 
-  map_res@tmYLLabelFontHeightF = 0.015
-  map_res@tmBorderThicknessF = 10.0
-  map_res@tmXBMajorThicknessF= 10.0
-  map_res@tmXBMinorThicknessF= 10.0
-  map_res@tmYLMajorThicknessF= 10.0
-  map_res@tmYLMinorThicknessF= 10.0
+  ; map_res@tmXBLabelFontHeightF = 0.015 
+  ; map_res@tmYLLabelFontHeightF = 0.015
+  ; map_res@tmBorderThicknessF = 10.0
+  ; map_res@tmXBMajorThicknessF= 10.0
+  ; map_res@tmXBMinorThicknessF= 10.0
+  ; map_res@tmYLMajorThicknessF= 10.0
+  ; map_res@tmYLMinorThicknessF= 10.0
 ;---Set map resources based on projection on WRF output file
   ;map_res = wrf_map_resources(a[0],map_res)
  map_res@mpProjection              = "Mercator" ; choose map projection
@@ -209,7 +208,7 @@ lon = b->g4_lon_2
 ;---Set resources for a contour
 
   cres                       = res            ; plot mods desired
-  cres@gsnMaximize           = True  
+  ;cres@gsnMaximize           = True  
   cres@cnLevelSelectionMode  = "ExplicitLevels"
   cres@cnLevels              = ispan(0,5600,100)
   cres@cnFillOn              = True             ; color plot desired
@@ -310,14 +309,11 @@ cmap (0:15,:) = 0.0
 
 
     qres                       = res            ; plot mods desired
- ; cres@gsnMaximize           = True  
- ; cres@cnFillOpacityF = 0.5          ; uncomment to maximize size
-;  cres@gsnSpreadColors       = True             ; use full range of colormap
-  qres@cnFillOn              = True             ; color plot desired
+   qres@cnFillOn              = True             ; color plot desired
   qres@cnLinesOn             = False            ; turn off contour lines
   qres@cnLineLabelsOn        = False          ; turn off contour labels
    qres@cnFillPalette   = cmap
-   qres@lbTitleString    = "g/kg"
+   qres@lbTitleString    = "q500 (g/kg)"
    qres@cnLevelSelectionMode = "ManualLevels"
    qres@cnMinLevelValF = 2
    qres@cnMaxLevelValF = 6
@@ -327,6 +323,8 @@ cmap (0:15,:) = 0.0
    qres@pmLabelBarOrthogonalPosF = -.005
   qres@sfXArray = lon
   qres@sfYArray = lat  
+    qres@lbTitleFontHeightF = 0.015   
+  qres@lbLabelFontHeightF = 0.015 
 
 ;---Set resources for Wind vector plot
   vres                  = res
@@ -341,15 +339,7 @@ cmap (0:15,:) = 0.0
   vres@vcRefAnnoParallelPosF     = 0.20             ; move ref vector over
  
   cres3                       = res            ; plot mods desired
- ; cres@gsnMaximize           = True  
- ; cres@cnFillOpacityF = 0.5          ; uncomment to maximize size
-;  cres@gsnSpreadColors       = True             ; use full range of colormap
- ; cres3@cnFillOn              = True             ; color plot desired
-  ;cres@cnLinesOn             = False            ; turn off contour lines
-  ;cres@cnLineLabelsOn        = False          ; turn off contour labels
-;cres@cnFillPalette   = cmap
-   
-  cres3@cnLineLabelPlacementMode = "computed"
+   cres3@cnLineLabelPlacementMode = "computed"
    cres3@cnLevelSelectionMode = "ManualLevels"
    cres3@cnLineLabelDensityF = 0.5
    cres3@cnMinLevelValF = 12000
@@ -412,10 +402,17 @@ cres4@cnInfoLabelOn   = False
 
 
   resP                = True                ; panel only resources
+;  resP@gsnPaperOrientation = "auto" 
+resP@gsnFrame            = False             ; don't advance the frame, so we can use gsn_text_ndc
   resP@gsnMaximize    = True                ; maximize plots
+  ; resP@gsnPaperOrientation = "landscape"
+  resP@gsnPanelXWhiteSpacePercent = 2
+ resP@gsnPanelYWhiteSpacePercent = 2
 resP@gsnPanelFigureStrings  = (/"a","b"/) + ")"
+ ;resP@gsnPanelDebug = True
   ;resP@gsnPanelLabelBar    = True
  gsn_panel(wks,plot,(/1,2/),resP)  
+frame(wks)
 
 
 end
